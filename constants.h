@@ -41,7 +41,8 @@
 // ma mau color
 #define AQUA 3
 #define PURPLE 5
-#define LIGHT_AQUA 23
+#define LIGHT_AQUA 59
+#define BLACK_RED 4
 #define LIGHT_YELLOW 14
 #define LIGHT_GREEN 10 
 #define BLACK 0

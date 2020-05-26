@@ -1,8 +1,18 @@
 #include <windows.h>
 #include "constants.h"
 
-void gotoxy(int x, int y)
-{
+int whereY() {
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi))
+		return csbi.dwCursorPosition.Y;
+}
+int whereX() {
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi))
+		return csbi.dwCursorPosition.X;
+	return -1;
+}
+void gotoxy(int x, int y) {
 	COORD coord;
 	coord.X = x;
 	coord.Y = y;
@@ -11,22 +21,19 @@ void gotoxy(int x, int y)
 		coord
 	);
 }
-void Nocursortype(bool check)
-{
+void Nocursortype(bool check) {
 	CONSOLE_CURSOR_INFO Info;
 	Info.bVisible = check;
 	Info.dwSize = 20;
 	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Info);
 }
-void showCur(bool CursorVisibility)
-{
+void showCur(bool CursorVisibility) {
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO cursor = { 1, CursorVisibility };
 	SetConsoleCursorInfo(handle, &cursor);
 }
 
-void setColor(WORD color)
-{
+void setColor(WORD color) {
 	HANDLE hConsoleOutput;
 	hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_SCREEN_BUFFER_INFO screen_buffer_info;
@@ -40,8 +47,7 @@ void setColor(WORD color)
 	SetConsoleTextAttribute(hConsoleOutput, wAttributes);
 }
 
-void setBGColor(WORD color)
-{
+void setBGColor(WORD color) {
 	HANDLE hConsoleOutput;
 	hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -57,8 +63,7 @@ void setBGColor(WORD color)
 	SetConsoleTextAttribute(hConsoleOutput, wAttributes);
 }
 
-void cls(HANDLE hConsole)
-{
+void cls(HANDLE hConsole) {
 	COORD coordScreen = { 0, 0 };    // home for the cursor 
 	DWORD cCharsWritten;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -89,8 +94,7 @@ void cls(HANDLE hConsole)
 	SetConsoleCursorPosition(hConsole, coordScreen);
 }
 
-void clrscr()
-{
+void clrscr() {
 	HANDLE hCon = GetStdHandle(STD_OUTPUT_HANDLE);
 	cls(hCon);
 }
@@ -101,14 +105,9 @@ void normalTextColor() {
 void defaultColor() {
 	setColor(WHITE);
 }
-void normalBGColor()
-{
+void normalBGColor() {
 	setColor(WHITE);
 	setBGColor(BLUE);
-}
-normalBGSColor() {
-	setColor(WHITE);
-	setBGColor(BLACK);
 }
 char getCursorChar()    /// Function which returns character on console's cursor position 
 {
