@@ -1,7 +1,10 @@
-add|Dong tu|them|.|We'll have to add more|||||
+a|Trang tu|dia chi|.|I study at BCVTHCM|||||
+accident|Danh tu|tai nan|dip may|tinh co|.|It was an accident|I only found it by accident||||
+account|Danh tu|tai khoan|.|open an account with a bank|||||
+activate|Dong tu|kich hoat|.|Windows is activated|||||
+add|Dong tu|them|.|We'll have to add more|Add 9 to the total||||
 administrator|Danh tu|nguoi quan li|.|Run as administrator|||||
 apple|Danh tu|qua tao|.|That is an apple tree|||||
-at|Trang tu|dia chi|.|I study at BCVTHCM|||||
 believe|Dong tu|tin|tin tuong|.|She didn't believe me|||||
 big|Tinh tu|to|lon|.|He's a big man|That jacket looks a bit big for you||||
 black|Tinh tu|den|.|I drink black drink coffee|||||
@@ -26,7 +29,7 @@ easy|Tinh tu|de|de dang|thoai mai|.|She's very easy to talk to|The place easy to
 exam|Danh tu|ki thi|.|She passed her exam|||||
 example|Danh tu|vi du|.|See example below|It's a bad example to kids||||
 face|Danh tu|mat|be mat|.|Go and wash your face|The face of the earth||||
-family|Danh tu|gia dinh|.|Almost every family in the county owns a television|A family of four|He's a friend of the family|asdasdasdasdas||
+family|Danh tu|gia dinh|.|Almost every family in the county owns a television|A family of four|He's a friend of the family|||
 free|Tinh tu|mien phi|tu do|thong suot|.|I got some free cinema tickets|This is a free country|Is the way free?|||
 freetime|Danh tu|thoi gian ranh|.||||||
 fresh|Tinh tu|tuoi|.|Fresh flowers|||||
@@ -65,6 +68,7 @@ quit|Dong tu|roi khoi|.|He has decided to quit as manager of the team|Quit work 
 real|Tinh tu|thuc|thuc te|thuc su|that|.|The real value of things|real gold||||
 rice|Danh tu|lua|gao|com|.|A grain of rice|brown rice||||
 rich|Tinh tu|giau co|.|America is a rich country|Orangee are rich in vitamin C||||
+sadasdasd|Danh tu|ddddddddddddddddddddddddddd|dddddddddddddddddddddddddddddddddd|.|Dddddddddddddddddddddddddddddddd|Anhquang|Ddddddddddddddd|||
 safe|Tinh tu|an toan|dam bao|.|You'll be safe here|It's not safe to go out at night|Is that ladder safe?|||
 setting|Danh tu|cai dat|thiet lap|.|To change the size of the font, go to Settings|||||
 small|Tinh tu|nho|be|.|That jacket's too small for you|I live in a small town||||
@@ -84,4 +88,5 @@ write|Dong tu|viet|.|She writes for a weekly journal|||||
 xmas|Danh tu|giang sinh|.||||||
 year|Danh tu|nam|.|First year student|I worked for this firm four years||||
 you|Dai tu|ban|anh|chi|ong|ba|ngai|cac ban|cac anh|cac chi|cac ngai|cac may|cac nguoi|.|I love you|How are you?|Do you speak Vietnamese?|Where do you live?|You don't understand me|
-zoom|Dong tu|phong to|.||||||
+zombie|Danh tu|thay ma|.||||||
+zoo|Danh tu|so thu|vuon thu|.|How about a trip to the zoo this afternoon?|||||
