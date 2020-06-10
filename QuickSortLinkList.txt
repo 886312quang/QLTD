@@ -1,0 +1,289 @@
+studytonight.com
+Tutorials 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Tests
+HTML Course
+Curious
+Practice Coding NEW
+We are Hiring!                  Sign in
+New Tutorials:        
+   Programming  Quick Sort  Data Structures  
+   Technology    Programming
+Use Quick Sort to Sort a Doubly Linked List
+         
+ AUGUST 26, 2019   by Yash3199
+Quicksort algorithm uses divide and conquer to gain the same time advantage like the merge sort algorithm, while not using any additional storage. As a trade-off, however, it is possible that the list may not be divided in half.
+
+Not much changes when we use the quick sort algorithm for a Linked List or a doubly linked list or even an array. In case of array we use the first and the last element to choose the pivot element, in case of linked list we will be using pointers to the first and the last node. Also, rather than using the array index for the pivot element, in case of linked list we will use a pointer to the pivot element.
+
+Rest the concept remains the same, we divide the list for elements lesser than the pivot and elements greater than the pivot
+
+Implementation in C++:
+Below we have C++ code to implement quicksort algorithm for Doubly linked list,
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+/* a node of doubly linked list */
+class Node {
+
+public:
+    int data;
+    Node *next_node;
+    Node *prev_node;
+
+};
+
+/* Function to swap two elements */
+void swap ( int* a, int* b ) 
+{ 
+    int t = *a; *a = *b; *b = t; 
+}
+
+// Function to find last node of the linked list
+Node *lastNode(Node *root)
+{
+    while (root && root->next_node)
+        root = root->next_node;
+
+    return root;
+}
+
+/* Arrange all the elements of the linked list as per the pivot element */
+Node* partition(Node *l, Node *h)
+{
+    // set h element as pivot
+    int x = h->data;
+    Node *i = l->prev_node;
+
+    // Similar to from j=l to h-1
+    for (Node *j = l; j != h; j = j->next_node)
+    {
+        if (j->data <= x)
+        {
+            // Similar to i++
+            i = (i == NULL)? l : i->next_node;
+            swap(&(i->data), &(j->data));
+        }
+    }
+
+    i = (i == NULL)? l : i->next_node;
+    swap(&(i->data), &(h->data));
+    return i;
+}
+
+/* Recursive implementation of quicksort for linked list */
+void _quickSort(Node* l, Node *h)
+{
+    if (h != NULL && l != h && l != h->next_node)
+    {
+        Node *p = partition(l, h);
+        _quickSort(l, p->prev_node);
+        _quickSort(p->next_node, h);
+    }
+
+}
+
+// Main function: It calls the _quickSort() method
+
+void quickSort(Node *head)
+{
+    // Find the last node
+    Node *h = lastNode(head);
+    // Call recursive QuickSort
+    _quickSort(head, h);
+}
+
+// Function to print the elements of array
+void printList(Node *head)
+{
+    while (head)
+    {
+        cout << head->data << " ";
+        head = head->next_node;
+    }
+    cout << endl;
+}
+
+/* Function of insertion in the beginning*/
+void push(Node** head_ref, int new_data)
+{
+    Node* new_node = new Node;  /* allocate node */
+    new_node->data = new_data;
+    /* Here, prev is always NULL */
+    new_node->prev_node = NULL;
+    /* link the old list off the new node */
+    new_node->next = (*head_ref);
+    /* change prev(head) to new node*/
+    if ((*head_ref) != NULL) (*head_ref)->prev_node = new_node;
+    /* Now, move the head pointing to the new node */
+    (*head_ref) = new_node;
+}
+
+/* Driver code */
+int main()
+{
+    Node *a = NULL;
+
+    push(&a, 7);
+
+    push(&a, 25);
+
+    push(&a, 6);
+
+    push(&a, 4);
+
+    push(&a, 25);
+
+    cout << "Linked List before sorting \n";
+
+    printList(a);
+
+    quickSort(a);
+
+    cout << "Linked List after sorting \n";
+
+    printList(a);
+
+    return 0;
+}
+Time Complexity of the Algorithm
+The worst case time complexity of this algorithm is O(n^2) for best case and O(nLogn) for average case. In this algorithm, when linked list is already sorted, then it will be the worst case.
+
+RELATED POSTS
+
+Python String Methods- isdigit(), isnumeric() and isdecimal()
+ PythonSmriti Satyan
+Smriti Satyan
+September 24, 2019
+Python String Methods- islower(), isupper() and isprintable()
+ PythonSmriti Satyan
+Smriti Satyan
+September 24, 2019
+Python String methods - isalpha(), isalnum() and isascii()
+ PythonSmriti Satyan
+Smriti Satyan
+September 24, 2019
+
+
+ 
+
+Subscribe and receive amazing posts directly in your inbox.
+Enter your email...
+
+SURPRISE ME WITH    
+What is Studytonight?
+
+About Us
+
+Authors
+
+Collaborate
+
+Testimonials
+
+Privacy Policy
+
+Terms
+
+Contact Us
+
+Suggest
+
+Tutorials
+
+Android
+
+Core Java
+
+C++
+
+Data Structures
+
+Python
+
+Network Programming
+
+DBMS & SQL
+
+Servlet
+
+More...
+
+Tests
+
+Core Java
+
+Android
+
+C++
+
+DBMS
+
+C Language
+
+More...
+
+Learn to Code
+
+HTML
+
+CSS
+
+Website Development
+
+Interview Questions
+
+Java Interview Question
+
+C++ Interview Question
+
+OS Interview Question
+
+DBMS Interview Question
+
+More...
+
+      
+
+Made with  by Abhishek Ahlawat
+© 2020 Studytonight.   All rights reserved.
+
+DMCA.com Protection Status

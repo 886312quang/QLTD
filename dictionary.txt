@@ -1,10 +1,10 @@
-a|Trang tu|dia chi|.|I study at BCVTHCM|||||
 accident|Danh tu|tai nan|dip may|tinh co|.|It was an accident|I only found it by accident||||
 account|Danh tu|tai khoan|.|open an account with a bank|||||
 activate|Dong tu|kich hoat|.|Windows is activated|||||
 add|Dong tu|them|.|We'll have to add more|Add 9 to the total||||
 administrator|Danh tu|nguoi quan li|.|Run as administrator|||||
 apple|Danh tu|qua tao|.|That is an apple tree|||||
+at|Danh tu|dia chi|.|I study at BCVTHCM|||||
 believe|Dong tu|tin|tin tuong|.|She didn't believe me|||||
 big|Tinh tu|to|lon|.|He's a big man|That jacket looks a bit big for you||||
 black|Tinh tu|den|.|I drink black drink coffee|||||

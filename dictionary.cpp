@@ -10,6 +10,8 @@ bool checkInput = false;
 bool checkUpdate = false;
 bool flag = false;
 bool flagAE = false;
+bool checkDelete = false;
+bool dhAdd = false;
 char anE[] = "   An Enter de chon tu        ";
 char notF[] = "    Khong co tu can tim kiem    ";
 char ex[] = "    Ban co muon thoat k (Y/N)  ";
@@ -19,8 +21,8 @@ struct nodeMeanV {
 	string mean;
 	nodeMeanV* next;
 };
-typedef struct nodeMeanV* Mean;					//node Mean LKD
-				Mean First = NULL;
+typedef struct nodeMeanV* Mean;							//node Mean LKD
+
 struct aWord {							
 	string tu;
 	string loai;
@@ -73,8 +75,7 @@ void ToMauHCN(int toadoX, int toadoY, int chieudai, int chieucao, int mauText) {
 	}
 	setColor(63);
 }
-void XoaHCN(int toadoX, int toadoY, int chieudai, int chieucao, int mau)
-{
+void XoaHCN(int toadoX, int toadoY, int chieudai, int chieucao, int mau) {
 	normalBGColor();
 	for (int j = toadoY + 1; j < toadoY + chieucao; j++)
 	{
@@ -271,13 +272,24 @@ void chuanHoaTu(string& style) {							//chuan hoa tu
 			style[i] += 32;
 		}	
 	}
+	if (!style.empty()) {
+		while (style[style.length() - 1] == '-')			//xoa cuoi
+			style.erase(style.length() - 1, 1);
+	}
+	for (int i = 0; i < style.length(); i++) {				//khoang - giua
+		if (style[i] == '-' && style[i + 1] == '-') {
+			style.erase(style.begin() + i);
+			i--;
+		}
+	}
 }
 void chuanHoaVD(string& style) {
 	while (style[0] == ' ') {								//Xoa khoang trang dau
 		style.erase(style.begin() + 0);
 	}
-	while (style[style.length()] == ' ') {				//cuoi
-		style.erase(style.begin() + style[style.length()]);
+	if (!style.empty()) {
+		while (style[style.length() - 1] == ' ')
+			style.erase(style.length() - 1, 1);
 	}
 	for (int i = 0; i < style.length(); i++) {				//khoang trang giua
 		if (style[i] == ' ' && style[i + 1] == ' ') {
@@ -295,23 +307,28 @@ void chuanHoaVD(string& style) {
 	}
 }
 //============================XuLyDe============================//
-void notify(bool flag, char* tb, int height) {					//Thong bao
-	//normalBGColor();
+void notify(bool flag, string tb, int height) {					//Thong bao
+	Nocursortype(true);
 	gotoxy(xNotify + 23, yNotify - 3 + height);
+	Nocursortype(false);
 	if(flag) {
 		setColor(LIGHT_RED);
-		cout << tb;
+		cout << justifyStr(tb, 30);
 		defaultColor();
 	}else {
 		setColor(LIGHT_GREEN);
-		cout << tb;
+		cout << justifyStr(tb, 30);
 		defaultColor();
 	}
+}
+void clearNotify(int height) {
+	gotoxy(xNotify + 23, yNotify - 3 + height);
+	cout<<"                                 ";
 }
 int hashKey(string key){		
 	return (int)key[0] - 97; 					  	 //bam key
 }
-void insertLastMean(Mean& First, string x, Word p) {//them mean LKD
+void insertLastMean(Mean& First, string x, Word& p) {//them mean LKD
 	Mean me = new nodeMeanV;
 	me->next = NULL;			
 	me->mean = x;
@@ -324,8 +341,17 @@ void insertLastMean(Mean& First, string x, Word p) {//them mean LKD
 			Last = Last->next;
 		}
 		Last->next = me;							//last->next = null
+	}												// LKK -> LKD
+}
+void insertEditMean(string x, Word& p) {
+	Mean me = new nodeMeanV;
+	me->next = NULL;			
+	me->mean = x;
+	Mean Last = p->info.tv;
+	while (Last->next != NULL) {
+		Last = Last->next;
 	}
-	p->info.tv = First;								// LKK -> LKD
+	Last->next = me;							//last->next = null
 }
 Word openFile(ifstream& fin) { 						// doc 1 thang						//note
 	Word p = new nodeWord;
@@ -346,7 +372,8 @@ Word openFile(ifstream& fin) { 						// doc 1 thang						//note
 		else{
 			insertLastMean(First, temp, p);				
 		}
-	}											
+	}
+	p->info.tv = First;									
 	for(int i = 0; i < 5; i++) {  								//TachVidu VD MCT
 		string temp = "";
 		getline(fin, temp, '|');
@@ -372,7 +399,7 @@ void addWord(listWord& k, Word p) {
 	}
 }
  void addHashTable(listWord k[],ifstream& fin) {	//Chen bang bam
-	fin.open("dictionary.txt", ios::in);	
+	fin.open("dictionary1.txt", ios::in);	
 	if(fin.fail()) {								//Check file
 		flag = true;
 		notify(flag, "   Mo file that bai            ", 0);
@@ -535,22 +562,33 @@ void showListWord(listWord k[], Word head, Word tail, Word now) {
 	}
 }
 bool checkImport(char import, string input) {
-	if(((import >= 'a' && import <= 'z') || (import >= 'A' && import <= 'Z' || (import == '-'))) && input.size() < 40)
+	if(((import >= 'a' && import <= 'z') || (import >= 'A' && import <= 'Z' || (import == '-') && input.size() > 1)) && input.size() < 40)
 		return true;
 	return false;
 }
-bool checkImportS(char import) {
-	if(import == '.' || 
+bool checkImportS(char import, string input) {
+	if((import == '.' || 
 	   import == '?' || 
 	   import == '"' || 
 	   import == '/' ||
 	   import == '|' ||
 	   import == '-' 
-		)
+		) && input.size() > 1)
 	return true;
 	return false;
 }
 //=========================ShowIFo=====================//
+void showMean(Word now, int& j) {
+	Mean p = now->info.tv;
+	gotoxy(xBox + 2, yBox + 7);
+	cout<<"************Nghia: ";
+	while(p != NULL) {
+		gotoxy(xBox + 2, yBox + 8 + j);
+		cout<<"- "<< p->mean;
+		j++;
+		p = p->next;
+	}
+}
 void showNowWord(Word now) {
 	system("cls");
 	char import;
@@ -568,15 +606,8 @@ void showNowWord(Word now) {
 	cout<<justifyStr(tu, wBoxMain - 4)<<endl;
 	gotoxy(xBox + 2, yBox + 6);
 	cout<<"_____"<<now->info.loai<<endl;
-	Mean n = now->info.tv;
 	int j = 0;
-	gotoxy(xBox + 2, yBox + 9);
-	while(n != NULL){
-		gotoxy(xBox + 2, yBox + 9 + j);
-		cout<<"_____"<<n->mean<<endl;
-		n = n->next;
-		j++;
-	}
+	showMean(now, j);
 	gotoxy(xBox + 2, yBox + 9 + j);
 	cout<<"Example:";
 	if(now->info.vd[0] == NULL) {
@@ -586,8 +617,10 @@ void showNowWord(Word now) {
 		int i = 0;
 		while(i <= 4) {	
 			if(now->info.vd[i] != NULL){
-				gotoxy(xBox + 2, yBox + 10 + j + i);
-				cout<<"- "<<*(now->info.vd[i]);
+				gotoxy(xBox + 2, yBox + 11  + i + j);
+				string temp = *(now->info.vd[i]);
+				chuanHoaVD(temp);
+				cout<<"- "<<temp;
 			}else {
 				break;
 			}
@@ -606,7 +639,7 @@ void keyUpSearch(Word& headSearch, Word& tailSearch, Word& nowSearch, listWord k
 		nowSearch = searchHead(k,nowSearch);
 	}else {
 		flag = true;
-		//notify(flag,"   DOWN                  ", 0);		
+		notify(flag,"   DOWN                  ", 0);		
 	}
 }
 void keyDownSearch(Word& headSearch, Word& tailSearch, Word& nowSearch, listWord k[], string input) {   
@@ -619,7 +652,7 @@ void keyDownSearch(Word& headSearch, Word& tailSearch, Word& nowSearch, listWord
 		nowSearch = searchTail(k, nowSearch);
 	}else {
 		flag = true;
-		//notify(flag,"   Up                    ", 0);		
+		notify(flag,"   Up                    ", 0);		
 	}
 }
 //============================CheckExist================================//
@@ -634,7 +667,14 @@ bool checkWordExist(listWord k[], string word) {
 }
 bool checkMeanExist(Mean First, string mean) {
 	for (Mean p = First;  p != NULL ; p = p->next) 
-        if ( p->mean == mean){
+        if (p->mean == mean){
+        	return true;
+		}
+	return false;
+}
+bool checkMeanExistEdit(Word now, string mean) {
+	for (Mean p =  now->info.tv;  p != NULL ; p = p->next) 
+        if (p->mean == mean){
         	return true;
 		}
 	return false;
@@ -651,57 +691,112 @@ bool checkExampleExist(int i, int n, Word p, string input) {
 		return true;
 	}else return false;
 }
-void dhAddWord(int i, string& input, char import, int chon, int& pos, int j, Word a) {
-	if(!a->info.loai.empty() && pos == 0){
+void dhAddWord(int i, string& input, char import, int chon, int& pos, int& j, Word now, bool& checkDelete) {
+	int k = 0;
+	int d = 0;
+	if(now == NULL && dhAdd == true || checkDelete == true || flagAE == true) {
+		bool check = false;
+		pos = 0;
+		j = 0;
+		Mean p = now->info.tv;
+		for(p; p != NULL; p = p->next) {
+			gotoxy(xBox + 3, yBox + 12);
+			cout<<"Nghia:";
+			pos++;
+			d++;
+			gotoxy(xBox + 9, yBox + 12 + pos);
+			cout<<p->mean;
+			clearDisplay(p->mean.size(), wBoxMain - 9);
+			gotoxy(xBox + 9, yBox + 12 + pos + 1);
+			clearDisplay(0, wBoxMain - 9);
+		}
+		while(d < 4) {
+			gotoxy(xBox + 9, yBox + 12 + d + 1);
+			cout<<"                                      ";	
+			d++;
+		}
+		under(xBox, wBoxMain, yBox + 4 + pos);
+		gotoxy(xBox + 1, 2 * yBox + 4 + pos + 1);
+		clearDisplay(xBox + 1, wBoxMain + 20);
+		while(j < 5) {
+			bool check = false;
+			if(now->info.vd[j] != NULL) {
+				gotoxy(xBox + 3, yBox + 17 + pos - 1);
+				cout<<"                               ";
+				gotoxy(xBox + 3, yBox + 17 + pos);
+				if(j == 0 && check == false) cout<<"Vidu:";
+				if(checkDelete == true) {
+					gotoxy(xBox + 3, yBox + 17 + pos + 1);
+					cout<<"                               ";
+				}	
+				gotoxy(xBox + 4, yBox + 19 + pos + j);
+				cout<<*now->info.vd[j];
+				string temp = *now->info.vd[j];
+				clearDisplay(temp.size(), wBoxMain - 5);
+				j++;
+				check = true;
+			}else {
+				break;
+			}
+		}
+		gotoxy(xBox + 4, yBox + 19 + pos + j);
+		clearDisplay(0, wBoxMain - 4);
+		check = true;
+		dhAdd = false;
+		checkDelete = false;
+	}	
+	if(!now->info.loai.empty() && pos == 0){
 		gotoxy(xBox + 14, yBox + 7);
-		cout<<a->info.loai;
+		cout<<now->info.loai;
 	}else {
 		gotoxy(xBox + 14, yBox + 7);
 		cout<<loai[chon];
 	}
-	if(j == 0) {
+	if(j == 0 && k == 0) {
 		gotoxy(xBox + 3, yBox + 17 + pos);
 		cout<<"Vidu:";
-		setColor(BLACK);
-		cout<<"Chua co vi du";
-		gotoxy(xBox + 3, yBox + 17 + pos - 1);
-		cout<<"                                   ";
+		setColor(LIGHT_RED);
+		cout<<"  Chua co vi du";
+		if(input.size() == 0) {
+			gotoxy(xBox + 3, yBox + 17 + pos + 1);
+			cout<<"                               ";
+		}
 		normalTextColor();
 	}else {
 		gotoxy(xBox + 3, yBox + 17 + pos);
 		cout<<"Vidu:";
 		setColor(LIGHT_RED);
 		cout<<"                                   ";
-		normalBGColor();
+		normalBGColor();	
 	}
 	gotoxy(xBox + 2 + input.size(), yBox + 2);
-	if(a->info.tu.empty() && input.empty() && i == 1) {	
+	if(now->info.tu.empty() && input.empty() && i == 1) {	
 		cout<<"Nhap tu moi:";
 		clearDisplay(12, wBoxMain - 2);
 		gotoxy(xBox + 2, yBox + 2);
-	}else if(!a->info.tu.empty() && i == 1 && input.empty()) {
+	}else if(!now->info.tu.empty() && i == 1 && input.empty()) {
 		gotoxy(xBox + 2, yBox + 2);
 		clearDisplay(0, wBoxMain - 3);
 		gotoxy(xBox + 2, yBox + 2);
-		cout<<a->info.tu;
-		input = a->info.tu;
+		cout<<now->info.tu;
+		input = now->info.tu;
 	}
 	if(i == 2) 	{
 		if(import == ENTER) {
 			flag = false;
-			notify(flag, " An Right/Left de chon loai tu  ", 0);
+			notify(flag, "An Right/Left de chon loai tu", 0);
 		}else {
 			flag = false;
-			notify(flag, " An Enter de chon loai tu       ", 0);
+			notify(flag, "An Enter de chon loai tu", 0);
 		}
 		gotoxy(xBox + 14, yBox + 7);
 	}
 	if(i == 3) 	{
 		flag = false;
 		if(pos > 0) {
-			notify(flag, " An Insert de luu nghia         ", 0);
+			notify(flag, "An Insert de luu nghia", 0);
 		}else {
-			notify(flag, " Them nghia cua tu              ", 0);
+			notify(flag, "Them nghia cua tu", 0);
 		}
 		gotoxy(xBox + 3, yBox + 12);
 		cout<<"Nghia:";
@@ -709,8 +804,8 @@ void dhAddWord(int i, string& input, char import, int chon, int& pos, int j, Wor
 	}
 	if(i == 4) {
 		flag = false;
-		notify(flag, " Them vi du/F2 de luu           ", 0);
-		if(j == 5 && !input.empty()) notify(flag, "      Da co du vi du         ", 1);
+		notify(flag, "Them vi du/F2 de luu", 0);
+		if(j == 5 && !input.empty()) notify(flag, "Da co du vi du", 1);
 		gotoxy(xBox + 9 + input.size(), yBox + 18 + pos);
 	}
 }
@@ -723,6 +818,51 @@ Mean nodePointer(int index, Word a) {				//tra ve (p) o vt index
 		i++;
 	}
 	return(p);
+}
+//=========================Xoa=======================//
+void deleteFMean(Word& a, Mean &First) { 	
+	Mean p;
+	p =	a->info.tv;
+	if(p == NULL) {
+		return;
+	}
+	First = p->next;
+	delete p;
+	return;
+}
+void deleteMean(Word& a, Mean& p ,int index, int& pos) {
+    Mean del;
+    Mean First = NULL;
+    del = nodePointer(index - 1, a);
+	if(index == 0) {
+		if(pos != 1) {
+			deleteFMean(a, First);
+			a->info.tv = First;
+			checkDelete = true;
+			pos--;
+			return;
+		}else{
+			Nocursortype(TRUE);
+			notify(flag, "Can it nhat 1 nghia cua tu", 1);
+		}
+	}else {
+		if((del == NULL) || (del->next == NULL))  return;
+		notify(flag, "Nhan Enter de xoa nghia", 0);
+	    del->next = p->next;
+	    delete p;
+	    checkUpdate = true;
+	    checkDelete = true;
+	    pos--;	 
+	    return;
+	}
+}
+void deleteExample(string* ex[],int index, int& j) {
+	string* temp = ex[index];
+	for (int i = index + 1; i < j; i++)
+		ex[i - 1] = ex[i];
+	ex[j - 1] = NULL;
+	j--;
+	delete temp;
 }
 //=========================VitriDH=======================//
 void indexEdit(int index, int pos ,int x, string temp) {
@@ -737,9 +877,12 @@ void indexEdit(int index, int pos ,int x, string temp) {
 	gotoxy(xBox + x + temp.size(), yBox + pos + index);
 }
 //============================EditMean==================================//
-void editMean(int n, Word a, int pos) {
+void editMean(Word& a, int& pos) {
 	int i = 0;
+	int d = 1;
 	Mean p = NULL;
+	Mean del = NULL;
+	Mean First = NULL;
 	string temp = "";
 	if(i == 0) {
 		p = nodePointer(i, a);
@@ -755,45 +898,57 @@ void editMean(int n, Word a, int pos) {
 			import = _getch();
 			if (import == KEY_UP) {
 				if(i > 0) i--;
-			}	
+			}
 			if (import == KEY_DOWN) {
-				if(i < n - 1) i++;
+				if(i < pos - d) i++;
 			}
 			p = nodePointer(i, a);
 			temp = p->mean;
 			indexEdit(i, 13, 9 , temp);
-		}else if (checkImport(import, temp) && import != ENTER) {
+			if(import == DELE){
+				notify(flag, "Nhan Enter de xoa nghia", 0);
+				import = _getch();
+				if(import == ENTER) {	
+					deleteMean(a, p, i, pos);
+					gotoxy(xBox + wBoxMain - 2, yBox + 13 + i);
+					cout<< " ";
+					flag = true;
+					checkDelete = true;
+					return;
+				}
+			}	
+		}else if (checkImport(import, temp) && import != ENTER){
 			temp += import;
 			cout<<import;
 		}else if(import == SPACE) {
 				temp += " ";
 		}else if (import == BACKSPACE && !temp.empty()) {   		//Xoa
 			temp.erase(temp.size() - 1, 1);
-			cout << "\b \b";								 		// \b \b Backspace
-		}else if (import == ENTER) {
+			cout << "\b \b";								 		// \b\b Backspace
+		}else if (import == ENTER && temp.size() > 0) {
 			chuanHoaVD(temp);
-			if(!checkMeanExist(First, temp)) {
+			if(checkMeanExistEdit(a, temp)) {
+				flag = true;										//Notify
+				notify(flag, "Da ton tai nghia nay", 1);
+				gotoxy(xBox + 9, yBox + 13 + i);
+				cout<<temp;
+			}else {
 				p->mean = temp;
 				gotoxy(xBox + 9, yBox + 13 + i);
 				cout<<temp;
 				temp = "";
 				gotoxy(xBox + wBoxMain - 2, yBox + 13 + i);
 				cout<< " ";
-				n++; //note
-				break;
-			}else {
-				flag = true;										//Notify
-				notify(flag, "    Da ton tai nghia nay        ", 1);
-				if(import)
-				notify(flag, "    					          ", 1);
+				notify(flag, "    					      ", 1);
+				return;
 			}
 		}else if(import == ESC) {
 			gotoxy(xBox + wBoxMain - 2, yBox + 13 + i);
 			cout<< " ";
 			gotoxy(xBox + 9, yBox + 13 + i);
 			cout<<p->mean;
-			break;
-		} 
+			return;
+		}
 	}
 }
 //============================EditExample===============================//
@@ -820,6 +975,16 @@ void editExample(int n, Word& a, int pos) {
 			}
 			temp = *a->info.vd[i];
 			indexEdit(i, pos + 19, 4 , temp);
+			if (import == DELE) {
+				notify(flag, "An Enter de xoa vi du ", 0);
+				import = _getch();
+				if (import == ENTER) {
+					deleteExample(a->info.vd, i , n);
+					checkDelete = true;
+					return;
+				}
+				notify(flag, "							", 0);
+			}
 		}else if (checkImport(import, temp) && import != ENTER) {
 			temp += import;
 			cout<<import;
@@ -829,7 +994,7 @@ void editExample(int n, Word& a, int pos) {
 		}else if (import == BACKSPACE && !temp.empty()) {   		//Xoa
 			temp.erase(temp.size() - 1, 1);
 			cout << "\b \b";								 		// \b \b Backspace
-		}else if (import == ENTER) {
+		}else if (import == ENTER && temp.size() > 0) {
 			chuanHoaVD(temp);
 			if(!checkExampleExist(i, n, a, temp)) {
 				*(a->info.vd[i]) = temp;
@@ -838,91 +1003,40 @@ void editExample(int n, Word& a, int pos) {
 				temp = "";
 				gotoxy(xBox + wBoxMain - 2, yBox + 19 + pos + i);
 				cout<< " ";
-				n++; //note
+				clearNotify(1);
 				break;
 			}else {
 				flag = true;
-				notify(flag, "    Da ton tai vi du nay        ", 1);
-				if(import)
-				notify(flag, "    					          ", 1);
+				notify(flag, "Da ton tai vi du nay", 1);
+
 			}
 		}else if(import == ESC) {
 			gotoxy(xBox + wBoxMain - 2, yBox + 19 + pos + i);
 			cout<< " ";
 			gotoxy(xBox + 4, yBox + 19 + pos + i);
-			cout<<*a->info.vd[i];
+			string temp = *a->info.vd[i];
+			cout<<temp;
+			clearDisplay(temp.size(), wBoxMain - 5);
 			break;
 		} 
 	}
 }
 Word addW(listWord k[], Word now, bool flagAE);
-void editWord(listWord k[], Word &now) {
-	string input = "";
-	int i = 0;	
-	flagAE = true;
-	while(true) {
-		Word temp = addW(k, now, flagAE);
-		if(temp != NULL){
-			flag = false;
-			notify(flag, "ENTER de luu lai sua doi nay", 0);
-			char import = _getch();
-			if(import == ENTER) {
-				now->info = temp->info;
-				break;
-			}else if(import == ESC) break;
-		}
-	}
-	notify(flag, "                                    ", 0);
-}
-//============================XulyInsertWord============================//
-Word addW(listWord k[], Word now, bool flagAE) {
+void editWord(listWord k[], Word& now) {
 	system("cls");
 	insertDraw();                                                // Ve khung insert
 	string input = "";
-	Word a;
-	a = new nodeWord;
 	int i = 1;
 	int chon = 0;
 	int j = 0;
 	int pos = 0;
 	int tempPos = 0;
-	Mean First = NULL;	
-	if(now != NULL && flagAE == true) {
-		a->info = now->info;
-		Mean me = a->info.tv;
-		bool check = false;
-		while(me !=NULL && check == false) {
-			gotoxy(xBox + 3, yBox + 12);
-			cout<<"Nghia:";
-			pos++;
-			gotoxy(xBox + 9, yBox + 12 + pos);
-			cout<<me->mean;
-			insertLastMean(First, me->mean, a);
-			me = me->next;
-		}
-		under(xBox, wBoxMain, yBox + 4 + pos);
-		notify(flag, "   					       ", 1);
-		while(j < 5) {
-			bool check = false;
-			if(now->info.vd[j] != NULL) {
-				gotoxy(xBox + 3, yBox + 17 + pos);
-				if(j == 0 && check == false) cout<<"Vidu:";
-				cout<<"                               ";
-				a->info.vd[j] = new string;
-				*a->info.vd[j] = *now->info.vd[j];
-				gotoxy(xBox + 4, yBox + 19 + pos + j);
-				cout<<*a->info.vd[j];
-				j++;
-				check = true;
-			}else {
-				break;
-			}
-		}
-		check = true;
-	}
+	dhAdd = true;
+	flagAE = true;
+	Mean First = NULL;
 	char import;
 	while(true) {
-		dhAddWord(i, input, import, chon , pos, j, a);
+		dhAddWord(i, input, import, chon , pos, j, now, checkDelete);
 		Nocursortype(true);
 		import = _getch();
 		Nocursortype(false);
@@ -933,7 +1047,7 @@ Word addW(listWord k[], Word now, bool flagAE) {
 					if(!checkWordExist(k,input)) {
 						setColor(LIGHT_GREEN);
 						gotoxy(xBox + 2, yBox + 2);
-						a->info.tu = input;
+						now->info.tu = input;
 						cout<<justifyStr(input, wBoxMain - 4);
 						input = "";			
 						i++;
@@ -946,7 +1060,7 @@ Word addW(listWord k[], Word now, bool flagAE) {
 				break;
 			}
 			case 2: {
-				if(a->info.loai.empty() && (import == 0 || import == -32)) {
+				if(now->info.loai.empty() && (import == 0 || import == -32)) {
 				    import = _getch();
 				    gotoxy(xBox + 14, yBox + 7);
 				    char l = 16;
@@ -963,23 +1077,23 @@ Word addW(listWord k[], Word now, bool flagAE) {
 				  			    }
 				  			break;
 				    }	  
-			    }else if(!a->info.loai.empty()) {
+			    }else if(!now->info.loai.empty()) {
 			    	if(import == KEY_UP)	i--;
 				}
-			    if(import == ENTER && a->info.loai.empty()) {
-			    	a->info.loai = loai[chon];
+			    if(import == ENTER && now->info.loai.empty()) {
+			    	now->info.loai = loai[chon];
 			    	i++;
-				}else if(import == ENTER && !a->info.loai.empty()){
-					a->info.loai = "";
+				}else if(import == ENTER && !now->info.loai.empty()){
+					now->info.loai = "";
 				}
 				break;
 			}
 			case 3: {
 				if(import == ENTER && !input.empty()) {
+					chuanHoaVD(input);
 					if(!checkMeanExist(First, input)) {
-						insertLastMean(First, input, a);
+						insertEditMean(input, now);
 						if(pos < 4){
-							chuanHoaVD(input);
 							gotoxy(xBox + 9, yBox + 13 + pos);
 							cout<<input;
 							gotoxy(xBox + 1, 2 * yBox + 4 + pos);
@@ -992,31 +1106,26 @@ Word addW(listWord k[], Word now, bool flagAE) {
 						cout<<"                                         ";
 						gotoxy(xBox + 9 + input.size(), yBox + 12);
 						notify(flag, "   					       ", 1);
+						gotoxy(xBox + 3, yBox + 16 + pos );
+						cout<<"                        ";
+						gotoxy(xBox + 3, yBox + 17 + pos);
+						if(j == 0) cout<<"Vidu:";
+						gotoxy(xBox + 3, yBox + 18 + pos);
+						clearDisplay(4, wBoxMain - 4);
+						int k = 0;
+						while(k < j && pos <= 4 && j > 0) {
+							gotoxy(xBox + 4, yBox + 19 + pos + k);
+							clearDisplay(4, wBoxMain - 4);
+							gotoxy(xBox + 4, yBox + 19 + pos + k);
+							cout<< *(now->info.vd[k]);
+							k++;
+						}
 					}else {
 						flag = true;
 						notify(flag, "  Da ton tai nghia nay       ", 1);	
 					}
-					gotoxy(xBox + 3, yBox + 16 + pos );
-					cout<<"                        ";
-					gotoxy(xBox + 3, yBox + 17 + pos);
-					if(j == 0) cout<<"Vidu:";
-					gotoxy(xBox + 3, yBox + 18 + pos);
-					clearDisplay(4, wBoxMain - 4);
-					int k = 0;
-					while(k < 5 && pos <= 4) {	
-						if(a->info.vd[k] != NULL) {
-							gotoxy(xBox + 4, yBox + 19 + pos + k);
-							clearDisplay(4, wBoxMain - 4);
-							gotoxy(xBox + 4, yBox + 19 + pos + k);
-							string temp = *(a->info.vd[k]);
-							cout<<temp;
-						}else{
-							break;
-						}
-						k++;
-					}
 				}
-				if(import == SPACE) {
+				if(import == SPACE && !input.size()) {
 					input += " ";
 				}
 				break;
@@ -1025,9 +1134,9 @@ Word addW(listWord k[], Word now, bool flagAE) {
 				if(import == ENTER && j < 5 && !input.empty()) {
 					chuanHoaVD(input);
 					tempPos = pos;
-					if(!checkExampleExist(100 ,j, a, input)) {
-						a->info.vd[j] = new string;
-						*(a->info.vd[j]) = input;
+					if(!checkExampleExist(100 ,j, now, input)) {
+						now->info.vd[j] = new string;
+						*(now->info.vd[j]) = input;
 						gotoxy(xBox + 4, yBox + 19 + pos + j);
 						cout<<input;
 						input = "";
@@ -1039,7 +1148,7 @@ Word addW(listWord k[], Word now, bool flagAE) {
 						flag = true;
 						notify(flag, "    Da ton tai vi du nay        ", 1);
 					}
-				}else if(import == SPACE) {
+				}else if(import == SPACE && input.size() > 0) {
 					input += " ";
 				}
 				break;
@@ -1053,10 +1162,10 @@ Word addW(listWord k[], Word now, bool flagAE) {
 					break;
 				}
 				case KEY_DOWN: {
-					if(i == 1 && !a->info.tu.empty()) {
+					if(i == 1 && !now->info.tu.empty()) {
 						i++;
 					}				
-					if(i == 2 && !a->info.loai.empty()) {
+					if(i == 2 && !now->info.loai.empty()) {
 						i++;
 					}
 					if(i == 3 && pos != 0) {
@@ -1066,19 +1175,27 @@ Word addW(listWord k[], Word now, bool flagAE) {
 					break;
 				}
 				case KEY_F2: {
-					if(i == 4){
+					flag = true;
+					if(i == 1 && now->info.tu.empty()) notify(flag, "Ban chua nhap tu", 1);
+					if(i == 3 && now->info.tv == NULL) notify(flag, "Tu can co it nhat 1 nghia", 1);
+					if(!now->info.tu.empty() && !now->info.loai.empty() && now->info.tv != NULL){
 						gotoxy(15,1);
-						i++;
+						i = 5;
 						successAdd("Dang ky thanh cong");
 						checkUpdate = true;
+						notify(flag,"                            ",1);
 					}
 					break;
 				}
 				case KEY_F3: {
-					if (i == 3 && !a->info.tv->mean.empty()) 
-						editMean(pos, a, pos);
-					if (i == 4 && a->info.vd[0] != NULL) 
-						editExample(j, a, pos);
+					if (i == 3 && now->info.tv != NULL) {
+						editMean(now, pos);
+					}else if (i == 3 && now->info.tv != NULL) {
+						flag = true;
+						notify(flag, "Chua co nghia de chinh sua", 0);
+					}	
+					if (i == 4 && now->info.vd[0] != NULL) 
+						editExample(j, now, pos);
 					break;
 				}
 				case KEY_INSERT:{
@@ -1102,8 +1219,8 @@ Word addW(listWord k[], Word now, bool flagAE) {
 			notify(flag, "                              ", 1);						 				 //\b \b xoa chu
 		}
 		if (i == 5) {
-			if(j < 5) {
-				a->info.vd[j] = NULL;
+			while(j < 5) {
+				now->info.vd[j] = NULL;
 				j++;
 			}
 			break;
@@ -1113,11 +1230,17 @@ Word addW(listWord k[], Word now, bool flagAE) {
 			notify(flag, " Ban muon thoat khoi che do them ", 0);
 			while(true) {
 				import = _getch();
-				if(import == ENTER ) {
+				if(import == ENTER && checkUpdate != false) {
+					flag = true;
+					notify(flag, "Da co su thay doi cua tu", 1);
+				}else{
+					notify(flag, "                        ", 1);
+				}
+				if(import == ENTER && checkUpdate == false) {
 					gotoxy(xBox + 2 + input.size(), yBox + 2);
 					cout<<"                                        ";
-					delete(a);
-					return NULL;	
+					//delete(now);
+					break;
 				}else if(import == ESC && (import != ENTER || import != -32 || import != 0)) {
 					notify(flag, "  							  ", 0);
 					break;	
@@ -1125,7 +1248,234 @@ Word addW(listWord k[], Word now, bool flagAE) {
 			}
 		}
 	}
-	return a;
+}
+//============================XulyInsertWord============================//
+Word addW(listWord k[], Word now, bool flagAE) {
+	system("cls");
+	insertDraw();                                                // Ve khung insert
+	string input = "";
+	int i = 1;
+	int chon = 0;
+	int j = 0;
+	int pos = 0;
+	int tempPos = 0;
+	dhAdd = true;
+	if(now == NULL) now = new nodeWord;
+	Mean First = NULL;
+	char import;
+	while(true) {
+		dhAddWord(i, input, import, chon , pos, j, now, checkDelete);
+		Nocursortype(true);
+		import = _getch();
+		Nocursortype(false);
+		switch(i) {
+			case 1: {
+				if(import == ENTER && !input.empty()) {
+					chuanHoaTu(input);
+					if(!checkWordExist(k,input)) {
+						setColor(LIGHT_GREEN);
+						gotoxy(xBox + 2, yBox + 2);
+						now->info.tu = input;
+						cout<<justifyStr(input, wBoxMain - 4);
+						input = "";			
+						i++;
+						setColor(WHITE);
+					}else {
+						flag = true;
+						notify(flag, "   Da ton tai tu dang them    ", 0);	
+					}
+				}
+				break;
+			}
+			case 2: {
+				if(now->info.loai.empty() && (import == 0 || import == -32)) {
+				    import = _getch();
+				    gotoxy(xBox + 14, yBox + 7);
+				    char l = 16;
+				    char r = 17;
+				    switch (import) {
+				   		case LEFT: if (chon > 0) {
+					                chon --;
+					                cout<< loai[chon]<<"      ";		
+				  			    }  
+				  			break;
+				  		case RIGHT: if (chon < 3){
+					                chon ++;
+					                cout<< loai[chon] <<"      ";		
+				  			    }
+				  			break;
+				    }	  
+			    }else if(!now->info.loai.empty()) {
+			    	if(import == KEY_UP)	i--;
+				}
+			    if(import == ENTER && now->info.loai.empty()) {
+			    	now->info.loai = loai[chon];
+			    	i++;
+				}else if(import == ENTER && !now->info.loai.empty()){
+					now->info.loai = "";
+				}
+				break;
+			}
+			case 3: {
+				if(import == ENTER && !input.empty()) {
+					chuanHoaVD(input);
+					if(!checkMeanExist(First, input)) {
+						insertLastMean(First, input, now);	
+						now->info.tv = First;
+						if(pos < 4){
+							gotoxy(xBox + 9, yBox + 13 + pos);
+							cout<<input;
+							gotoxy(xBox + 1, 2 * yBox + 4 + pos);
+							clearDisplay(xBox + 1, wBoxMain + 20);
+							pos++;
+							under(xBox, wBoxMain, yBox + 4 + pos);
+						}
+						input = "";
+						gotoxy(xBox + 9 + input.size(), yBox + 12);
+						cout<<"                                         ";
+						gotoxy(xBox + 9 + input.size(), yBox + 12);
+						notify(flag, "   					       ", 1);
+						gotoxy(xBox + 3, yBox + 16 + pos );
+						cout<<"                        ";
+						gotoxy(xBox + 3, yBox + 17 + pos);
+						if(j == 0) cout<<"Vidu:";
+						gotoxy(xBox + 3, yBox + 18 + pos);
+						clearDisplay(4, wBoxMain - 4);
+						int k = 0;
+						while(k < j && pos <= 4 && j > 0) {
+							gotoxy(xBox + 4, yBox + 19 + pos + k);
+							clearDisplay(4, wBoxMain - 4);
+							gotoxy(xBox + 4, yBox + 19 + pos + k);
+							cout<< *(now->info.vd[k]);
+							k++;
+						}
+					}else {
+						flag = true;
+						notify(flag, "  Da ton tai nghia nay       ", 1);	
+					}
+				}
+				if(import == SPACE && !input.size()) {
+					input += " ";
+				}
+				break;
+			}
+			case 4: {
+				if(import == ENTER && j < 5 && !input.empty()) {
+					chuanHoaVD(input);
+					tempPos = pos;
+					if(!checkExampleExist(100 ,j, now, input)) {
+						now->info.vd[j] = new string;
+						*(now->info.vd[j]) = input;
+						gotoxy(xBox + 4, yBox + 19 + pos + j);
+						cout<<input;
+						input = "";
+						gotoxy(xBox + 4 + input.size(), yBox + 18 + pos);
+						cout<<"                                              ";
+						gotoxy(xBox + 4 + input.size(), yBox + 18 + pos);
+						j++;
+					}else {
+						flag = true;
+						notify(flag, "    Da ton tai vi du nay        ", 1);
+					}
+				}else if(import == SPACE && input.size() > 0) {
+					input += " ";
+				}
+				break;
+			}
+		}
+		if(import == 0 || import == -32) {
+			import = _getch();
+			switch(import) {
+				case KEY_UP: {
+					if(i > 1) i--;
+					break;
+				}
+				case KEY_DOWN: {
+					if(i == 1 && !now->info.tu.empty()) {
+						i++;
+					}				
+					if(i == 2 && !now->info.loai.empty()) {
+						i++;
+					}
+					if(i == 3 && pos != 0) {
+						i++;
+					}
+					input = "";
+					break;
+				}
+				case KEY_F2: {
+					flag = true;
+					if(i == 1 && now->info.tu.empty()) notify(flag, "Ban chua nhap tu", 1);
+					if(i == 3 && now->info.tv == NULL) notify(flag, "Tu can co it nhat 1 nghia", 1);
+					if(!now->info.tu.empty() && !now->info.loai.empty() && now->info.tv != NULL){
+						gotoxy(15,1);
+						i = 5;
+						successAdd("Dang ky thanh cong");
+						checkUpdate = true;
+						notify(flag,"                            ",1);
+					}
+					break;
+				}
+				case KEY_F3: {
+					if (i == 3 && now->info.tv != NULL) {
+						editMean(now, pos);
+					}else if (i == 3 && now->info.tv != NULL) {
+						flag = true;
+						notify(flag, "Chua co nghia de chinh sua", 0);
+					}	
+					if (i == 4 && now->info.vd[0] != NULL) 
+						editExample(j, now, pos);
+					break;
+				}
+				case KEY_INSERT:{
+					if(i == 3) {
+						i++;
+					}
+					break;
+				}
+			}
+		}else if((checkImport(import, input) && i != 2)) {
+			input +=import;
+			cout<<import;
+			clearDisplay(input.size(), 40);
+			notify(flag, "                            ", 0);
+			notify(flag, "                            ", 1);
+		}else if (import == BACKSPACE && !input.empty()) {   				 //Xoa
+			input.erase(input.size() - 1, 1);
+			cout << "\b";
+			cout << " ";
+			cout << "\b";
+			notify(flag, "                              ", 1);						 				 //\b \b xoa chu
+		}
+		if (i == 5) {
+			while(j < 5) {
+				now->info.vd[j] = NULL;
+				j++;
+			}
+			break;
+		}
+		if (import == ESC) {
+			flag = true;
+			while(true) {
+				import = _getch();
+				if(import == ENTER && checkUpdate != false) {
+					flag = true;
+					notify(flag, "Da co su thay doi cua tu", 1);
+				}else{
+					notify(flag, "                        ", 1);
+				}
+				if(import == ENTER && checkUpdate == false) {
+					gotoxy(xBox + 2 + input.size(), yBox + 2);
+					cout<<"                                        ";
+					break;
+				}else if(import == ESC && (import != ENTER || import != -32 || import != 0)) {
+					notify(flag, "  							  ", 0);
+					break;	
+				}													//check dk 
+			}
+		}
+	}
+	return now;
 }
 int position(Word F, Word p) {
 	int pos;
@@ -1161,16 +1511,14 @@ void selectionSortWord(listWord k[], Word now) {
 		}
 	}
 }
-void insertWord(listWord k[], Word now) {  					//con cach khac hay hon
-	Word p;
+void insertWord(listWord k[], Word p) {  					//con cach khac hay hon
 	flagAE = false;
-	Word nAdd = addW(k, now, flagAE);
-	if(nAdd != NULL) {										//kt nAdd co ton tai khong
-		int key = hashKey(nAdd->info.tu);
-		p = new nodeWord;
+	p = NULL;
+	p = addW(k, p, flagAE);
+	if(p != NULL) {										//kt nAdd co ton tai khong
+		int key = hashKey(p->info.tu);
 		p->left = NULL;
 		p->right = NULL;
-		p->info = nAdd->info;
 		addWord(k[key], p);
 		Word q = k[key].tail;
 		if(q != NULL) {
@@ -1197,30 +1545,29 @@ void insertWord(listWord k[], Word now) {  					//con cach khac hay hon
 void mainSearch(listWord k[]) {
 	setBGColor(LIGHT_AQUA);
 	bool check = false;
-	char import;
-	int xTemp;											//import key
+	char import;													//import key
 	string input = "";										
-	Word dpHead;										
-	Word headSearch;										//dau
-	Word tailSearch;										//cuoi
-	Word nowSearch;											//hien tai
-	while(true){
+	Word dpHead = NULL;										
+	Word headSearch = NULL;											//dau
+	Word tailSearch = NULL;											//cuoi
+	Word nowSearch = NULL;											//hien tai
+	while(true){		
 		mainDraw();
-		if(!checkInput) {									//check false
+		if(!checkInput) {											//check false
 			if(input.empty()) {
 				flag = false;
-				//notify(flag, "    Nhan Up/Down de tim tu      ", 0);						
-				dpHead = displayHead(k);					//hien thi dau
+				notify(flag, "    Nhan Up/Down de tim tu      ", 0);						
+				dpHead = displayHead(k);							//hien thi dau
 				headSearch = nowSearch = dpHead;
 				tailSearch = searchEnd(k, input, headSearch);
 			}else {										
 				headSearch = searchInput(k,input);
 				if(headSearch == NULL) {
 					flag = true;
-					//notify(flag, notF, 0);
+					notify(flag, notF, 0);
 				}else {
 					flag = false;
-					//notify(flag, anE, 0);
+					notify(flag, anE, 0);
 				}
 				nowSearch = headSearch;
 				tailSearch = searchEnd(k, input, headSearch);
@@ -1244,7 +1591,7 @@ void mainSearch(listWord k[]) {
 			check = true;
 			if(check) {
 				flag = false;
-				//notify(flag, anE, 0);
+				notify(flag, anE, 0);
 			}
 			import = _getch();
 			switch(import) {
@@ -1267,8 +1614,9 @@ void mainSearch(listWord k[]) {
 					input = "";			
 					break;
 				}
-				case KEY_INSERT: {									//Nhap
-					insertWord(k, nowSearch);
+				case KEY_INSERT: {
+					Word p = NULL;								//Nhap
+					insertWord(k, p);
 					input = "";
 					dpHead = displayHead(k);						//hien thi dau
 					headSearch = nowSearch = dpHead;
@@ -1335,7 +1683,7 @@ void mainSearch(listWord k[]) {
 			}
 			break;	
 		}
-	}	
+	}
 }
 int main() {
 	resizeConsole(CSWIDTH, CSHEIGHT);
@@ -1348,7 +1696,7 @@ int main() {
 	addHashTable(k,fin);
 	mainSearch(k);
 	if(checkUpdate) {
-		fout.open("dictionary.txt", ios::out);
+		fout.open("dictionary1.txt", ios::out);
 		writeFile(k, fout);
 		fout.close();
 	}

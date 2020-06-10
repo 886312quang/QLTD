@@ -6,6 +6,7 @@
 // Quay con tro ve 1 don vi char
 #define KEY_INSERT 82
 #define BACKSPACE 8
+#define DELE 83
 // OK
 #define ENTER 13
 // thoat truc tiep va ve Menu chinh
