@@ -1406,8 +1406,8 @@ Word addW(listWord k[], Word now, bool flagAE) {
 				case KEY_F2: {
 					flag = true;
 					if(i == 1 && now->info.tu.empty()) notify(flag, "Ban chua nhap tu", 1);
-					if(i == 3 && now->info.tv == NULL) notify(flag, "Tu can co it nhat 1 nghia", 1);
-					if(!now->info.tu.empty() && !now->info.loai.empty() && now->info.tv != NULL){
+					if(i == 3 && now->info.tv->mean.empty())  notify(flag, "Tu can co it nhat 1 nghia", 1);
+					if(!now->info.tu.empty() && !now->info.loai.empty() && !now->info.tv->mean.empty()){
 						gotoxy(15,1);
 						i = 5;
 						successAdd("Dang ky thanh cong");
