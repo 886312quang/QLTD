@@ -495,7 +495,7 @@ void writeFile(listWord k[], ofstream& fout) {
 		}
 	}
 }
-Word searchDetail(listWord k[], string input) {
+/*Word searchDetail(listWord k[], string input) {
 	Word p = searchInput(k, input);	
 	if(p == NULL) {								 	//NULL
 		flag = true;
@@ -516,7 +516,7 @@ Word searchDetail(listWord k[], string input) {
 			i++;
 		}
 	}
-}
+}*/
 
 Word displayHead(listWord k[]) {			//hien thi thang dau tien neu k co input
 	Word dpHead = NULL;			
@@ -594,10 +594,10 @@ void showNowWord(Word now) {
 	Nocursortype(true);
 	if(now == NULL) {
 		flag = true;
-		notify(flag, "               Loi                 ", 0);
+		notify(flag, "Loi                 ", 0);
 	}else {
 		flag = false;
-		notify(flag, "    An F4 de chinh sua tu          ", 0);
+		notify(flag, "An F4 de chinh sua tu          ", 0);
 	}
 	mainDraw();
 	string tu = now->info.tu;
@@ -638,7 +638,7 @@ void keyUpSearch(Word& headSearch, Word& tailSearch, Word& nowSearch, listWord k
 		nowSearch = searchHead(k,nowSearch);
 	}else {
 		flag = true;
-		notify(flag,"   DOWN                  ", 0);		
+		notify(flag,"DOWN                  ", 0);		
 	}
 }
 void keyDownSearch(Word& headSearch, Word& tailSearch, Word& nowSearch, listWord k[], string input) {   
@@ -651,7 +651,7 @@ void keyDownSearch(Word& headSearch, Word& tailSearch, Word& nowSearch, listWord
 		nowSearch = searchTail(k, nowSearch);
 	}else {
 		flag = true;
-		notify(flag,"   Up                    ", 0);		
+		notify(flag,"Up                    ", 0);		
 	}
 }
 //============================CheckExist================================//
@@ -693,12 +693,12 @@ bool checkExampleExist(int i, int n, Word p, string input) {
 void dhAddWord(int i, string& input, char import, int chon, int& pos, int& j, Word now, bool& checkDelete) {
 	int k = 0;
 	int d = 0;
-	if(now == NULL && dhAdd == true || checkDelete == true || flagAE == true) {
+	if (now == NULL && dhAdd == true || checkDelete == true || flagAE == true) {
 		bool check = false;
 		pos = 0;
 		j = 0;
 		Mean p = now->info.tv;
-		for(p; p != NULL; p = p->next) {
+		for (p; p != NULL; p = p->next) {
 			gotoxy(xBox + 3, yBox + 12);
 			cout<<"Nghia:";
 			pos++;
@@ -709,7 +709,7 @@ void dhAddWord(int i, string& input, char import, int chon, int& pos, int& j, Wo
 			gotoxy(xBox + 9, yBox + 12 + pos + 1);
 			clearDisplay(0, wBoxMain - 9);
 		}
-		while(d < 4) {
+		while (d < 4) {
 			gotoxy(xBox + 9, yBox + 12 + d + 1);
 			cout<<"                                      ";	
 			d++;
@@ -717,7 +717,7 @@ void dhAddWord(int i, string& input, char import, int chon, int& pos, int& j, Wo
 		under(xBox, wBoxMain, yBox + 4 + pos);
 		gotoxy(xBox + 1, 2 * yBox + 4 + pos + 1);
 		clearDisplay(xBox + 1, wBoxMain + 20);
-		while(j < 5) {
+		while (j < 5) {
 			bool check = false;
 			if(now->info.vd[j] != NULL) {
 				gotoxy(xBox + 3, yBox + 17 + pos - 1);
@@ -744,14 +744,14 @@ void dhAddWord(int i, string& input, char import, int chon, int& pos, int& j, Wo
 		dhAdd = false;
 		checkDelete = false;
 	}	
-	if(!now->info.loai.empty() && pos == 0){
+	if (!now->info.loai.empty() && pos == 0){
 		gotoxy(xBox + 14, yBox + 7);
 		cout<<now->info.loai;
 	}else {
 		gotoxy(xBox + 14, yBox + 7);
 		cout<<loai[chon];
 	}
-	if(j == 0 && k == 0) {
+	if (j == 0 && k == 0) {
 		gotoxy(xBox + 3, yBox + 17 + pos);
 		cout<<"Vidu:";
 		setColor(LIGHT_RED);
@@ -769,7 +769,7 @@ void dhAddWord(int i, string& input, char import, int chon, int& pos, int& j, Wo
 		normalBGColor();	
 	}
 	gotoxy(xBox + 2 + input.size(), yBox + 2);
-	if(now->info.tu.empty() && input.empty() && i == 1) {	
+	if (now->info.tu.empty() && input.empty() && i == 1) {	
 		cout<<"Nhap tu moi:";
 		clearDisplay(12, wBoxMain - 2);
 		gotoxy(xBox + 2, yBox + 2);
@@ -821,7 +821,7 @@ Mean nodePointer(int index, Word a) {				//tra ve (p) o vt index
 //=========================Delete=======================//
 void deleteFMean(Word& a, Mean &First) { 	
 	Mean p = NULL;
-	p =	a->info.tv;
+	p =	First;
 	if(p == NULL) {
 		return;
 	}
@@ -1675,7 +1675,7 @@ void mainSearch(listWord k[]) {
 						checkUpdate = true;
 						dpHead = displayHead(k);
 						nowSearch = headSearch = dpHead;
-						tailSearch = searchEnd(k,input,headSearch);
+						tailSearch = searchEnd(k, input, headSearch);
 					}else break;
 					break;
 				}

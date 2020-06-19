@@ -1,15 +1,13 @@
-accident|Danh tu|tai nan|dip may|tinh co|.|It was an accident|I only found it by accident||||
 account|Danh tu|tai khoan|.|open an account with a bank|||||
+activate|Dong tu|kich hoat|.|Windows is activated|||||
+add|Dong tu|them|.|We'll have to add more|Add 9 to the total||||
 administrator|Danh tu|nguoi quan li|.|Run as administrator|||||
+apple|Danh tu|qua tao|.|That is an apple tree|||||
+at|Danh tu|dia chi|.|I study at BCVTHCM|||||
 believe|Dong tu|tin|tin tuong|.|She didn't believe me|||||
-big|Tinh tu|to|lon|.|He's a big man|That jacket looks a bit big for you||||
-black|Tinh tu|den|.|I drink black drink coffee|||||
 blue|Tinh tu|xanh lam|.|A blue shirt|||||
 buy|Dong tu|mua|.|She is saving money to buy a new house|I'll buy off the investigators||||
-browser|Danh tu|trinh duyet|.|I use Chrome browser|||||
-call|Dong tu|keu|goi|.|His name's Hiroshi but everyone calls him Hiro|I'll call a taxi for you|I'll call again later|||
 care|Dong tu|cham soc|quan tam|.|I don't care what she says|||||
-check|Dong tu|kiem tra|.|Check for updates|I just need to check my email|Check your work before handing it in|||
 clean|Tinh tu|sach|sach se|trong sach|.|Cats are clean animals|She has a clean record||||
 close|Dong tu|dong|dong cua|.|Close a door|The shops close at 5:30||||
 collect|Dong tu|su tam|gom gop|thu gom|.|She collects dolls.|||||
@@ -44,7 +42,7 @@ internet|Danh tu|internet|.|I looked it up on the Internet|||||
 jacket|Danh tu|ao vec tong|ao vec nu|bao giu nhiet|.|I felt a bit chilly so I put on a jacket.|||||
 job|Danh tu|viec lam|cong viec|.|She's applied for a job with an insurance company.|||||
 karate|Danh tu|mon vo karate|.|There is also full contact tae kwon do and karate.|||||
-keyboard|Danh tu|ban phim|ban chu|Dddddddddddddddd|.|QWERTY keyboard|||||
+keyboard|Danh tu|ban phim|ban chu|.|QWERTY keyboard|||||
 lab|Danh tu|phong thi nghiem|.|I'll meet you outside the science lab|I have a lab||||
 love|Danh tu|tinh yeu|tinh thuong|long yeu|.|love of one's country|first love|the love of sb's life|||
 manage|Dong tu|quan ly|dieu hanh|trong nom|.|He manage the finances here|Can you manage childrend well?|I manage a shop|||
@@ -84,5 +82,4 @@ write|Dong tu|viet|.|She writes for a weekly journal|||||
 xmas|Danh tu|giang sinh|.||||||
 year|Danh tu|nam|.|First year student|I worked for this firm four years||||
 you|Dai tu|ban|anh|chi|ong|ba|ngai|cac ban|cac anh|cac chi|cac ngai|cac may|cac nguoi|.|I love you|How are you?|Do you speak Vietnamese?|Where do you live?|You don't understand me|
-zombie|Danh tu|thay ma|.||||||
 zoo|Danh tu|so thu|vuon thu|.|How about a trip to the zoo this afternoon?|||||
