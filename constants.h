@@ -8,6 +8,7 @@
 #define BACKSPACE 8
 #define DELE 83
 // OK
+#define	TAB 9
 #define ENTER 13
 // thoat truc tiep va ve Menu chinh
 #define ESC  27
