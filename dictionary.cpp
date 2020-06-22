@@ -307,6 +307,8 @@ void chuanHoaVD(string& style) {
 void notify(bool flag, string tb, int height) {					//Thong bao
 	Nocursortype(true);
 	gotoxy(xNotify + 23, yNotify - 3 + height);
+	cout<<"                          	";
+	gotoxy(xNotify + 23, yNotify - 3 + height);
 	Nocursortype(false);
 	if(flag) {
 		setColor(LIGHT_RED);
@@ -568,7 +570,8 @@ void showListWord(listWord k[], Word head, Word tail, Word now) {
 bool checkImport(char import, string input) {
 	if(((import >= 'a' && import <= 'z') ||
 		(import >= 'A' && import <= 'Z'  ||
-		(import == '-') && input.size() > 0)) && input.size() < 40)
+		(import == '-') && input.size() > 0)) 
+		&& input.size() < 40)
 		return true;
 	return false;
 }
@@ -617,24 +620,6 @@ void showShowMean(Word now, int& pos, bool Tap, Mean &First) {
 	cout<<"^";
 	normalBGColor();
 	char import;
-	/*if(Tap) {
-		while(true) {
-			import = _getch();
-			if(import == KEY_UP && t > 0)  {
-				t--;
-			}else if(import == KEY_DOWN && t < pos - 4) {
-				t++;
-			}else if(import == ESC) {
-				return;
-			}else if(import == KEY_F3) {
-				editMean(now, t, pos, First);
-				return;
-			}
-			showM(t, pos, now);	
-		}
-		Tap = false;
-		return;
-	}*/
 	showM(i, pos, now);
 }
 void showMean(Word now, int& j) {
@@ -776,14 +761,10 @@ void dhAddWord(int i, string& input, char import, int chon, int& pos, int &d, in
 				cout<<"                                      ";	
 				t++;
 			}
-			gotoxy(xBox + 26, yBox + 17);
-			cout<<"v";
 			under(xBox, wBoxMain, yBox + 4 + pos);
 			gotoxy(xBox + 1, 2 * yBox + 4 + pos + 1);
 			clearDisplay(xBox + 1, wBoxMain + 20);
 		}else if(d > 4 && checkDelete) {
-			gotoxy(xBox + 26, yBox + 17);
-			cout<<" ";
 			Mean p = now->info.tv;
 			int i = 0;
 			int kt = d - 3;
@@ -799,6 +780,13 @@ void dhAddWord(int i, string& input, char import, int chon, int& pos, int &d, in
 				i++;
 			}
 			checkDelete = false;
+		}
+		if(d > 4) {
+			gotoxy(xBox + 26, yBox + 17);
+			setBGColor(LIGHT_YELLOW);
+			setColor(BLACK);
+			cout<<"v";
+			normalBGColor();
 		}
 		while (j < 5) {
 			bool check = false;
@@ -876,19 +864,15 @@ void dhAddWord(int i, string& input, char import, int chon, int& pos, int &d, in
 	}
 	if(i == 3) 	{
 		flag = false;
-		if(pos > 0) {
-			notify(flag, "An Insert de luu nghia         ", 0);
-		}else {
-			notify(flag, "Them nghia cua tu				 ", 0);
-		}
+		notify(flag, "Them nghia cua tu		", 0);
 		gotoxy(xBox + 3, yBox + 12);
 		cout<<"Nghia:";
 		gotoxy(xBox + 9 + input.size(), yBox + 12);	
 	}
 	if(i == 4) {
 		flag = false;
-		notify(flag, "Them vi du/F2 de luu				  ", 0);
-		if(j == 5 && !input.empty()) notify(flag, "Da co du vi du				", 1);
+		notify(flag, "Them vi du/F2 de luu   ", 0);
+		if(j == 5 && !input.empty()) notify(flag, "Da co du vi du			", 1);
 		gotoxy(xBox + 9 + input.size(), yBox + 18 + pos);
 	}
 }
@@ -973,13 +957,13 @@ void deleteWord(listWord k[], Word& now) {
 	}
 }
 //=========================VitriDH=======================//
-void indexEdit(int index, int pos ,int x, string temp) {
-	gotoxy(xBox + wBoxMain - 2, yBox + pos + index + 1);
+void indexEdit(int index, int pos ,int x, string temp) {		//dh
+	gotoxy(xBox + wBoxMain - 1, yBox + pos + index + 1);
 	cout<< " ";
-	gotoxy(xBox + wBoxMain - 2, yBox + pos + index - 1);
+	gotoxy(xBox + wBoxMain - 1, yBox + pos + index - 1);
 	cout<< " ";
-	gotoxy(xBox + wBoxMain - 2, yBox + pos + index);
-	setBGColor(WHITE);
+	gotoxy(xBox + wBoxMain - 1, yBox + pos + index);
+	setBGColor(LIGHT_AQUA);
 	cout<< " ";
 	normalBGColor();
 	gotoxy(xBox + x + temp.size(), yBox + pos + index);
@@ -1006,30 +990,55 @@ void editMean(Word& a, int start, int& pos, Mean& First) {
 		if (import == 0 || import == -32) {
 			import = _getch();
 			if (import == KEY_UP) {
-				if(i > start) {
-					i--;
-					index--;
-				} 
-				if(index == 0 && pos > 4 && vtShow > 0) {
+				index--;
+				if(index == -1 && pos > 4 && vtShow > 0) {
+					gotoxy(xBox + 26, yBox + 11);			//dh
+					cout<<" ";
+					gotoxy(xBox + 26, yBox + 17);
+					setBGColor(LIGHT_YELLOW);
+					setColor(BLACK);
+					cout<<"v";
+					normalBGColor();
 					vtShow--;
-				}
+					index++;
+				}else if(index == -1) index++;
 			}
 			if (import == KEY_DOWN) {
-				if(i < pos - 1 && index < 3) {
-					i++;
+				if(index < pos - 1) {
 					index++;
-				}
-				if(index == 3 && pos > 4 && vtShow < pos - 4) {
+				}else if(pos > 4) index++;
+				if(index == 4 && pos > 4 && vtShow < pos - 4) {
 					vtShow++;
+					index--;
+				}
+				if(index == 4) {
+					index--;
+				}
+				if(vtShow == pos - 4) {					//dh
+					gotoxy(xBox + 26, yBox + 17);
+					cout<<" ";
+				}else {
+					gotoxy(xBox + 26, yBox + 17);
+					setBGColor(LIGHT_YELLOW);
+					setColor(BLACK);
+					cout<<"v";
+					normalBGColor();
 				}
 			}
-			if((vtShow <= pos - 4) && pos > 4) {//>4
+			if((vtShow <= pos - 4) && pos > 4) {	//>4
 				showM(vtShow, pos, a);
+				if(vtShow >= 1) {					//dh
+					gotoxy(xBox + 26, yBox + 11);
+					setBGColor(LIGHT_YELLOW);
+					setColor(BLACK);
+					cout<<"^";
+					normalBGColor();
+				}
 				p = nodePointer(index + vtShow, a);
 				temp = p->mean;
 				vtDelete = index + vtShow;
 				indexEdit(index, 13, 9, temp);
-			}else if(vtShow < 1) {//<4mean
+			}else if(vtShow < 1) {					//<4mean						
 				p = nodePointer(index, a);
 				temp = p->mean;
 				vtDelete = index;
@@ -1039,9 +1048,10 @@ void editMean(Word& a, int start, int& pos, Mean& First) {
 				notify(flag, "Nhan Enter de xoa", 1);
 				import = _getch();
 				if(import == ENTER) {	
-					deleteMean(a, p, vtDelete, pos, First);
-					gotoxy(xBox + wBoxMain - 2, yBox + 13 + index);
+					deleteMean(a, p, vtDelete, pos, First);			//xoa	
+					gotoxy(xBox + wBoxMain - 2, yBox + 13 + index); //dh
 					cout<< " ";
+					notify(flag, "                            ", 1);
 					flag = true;
 					return;
 				}
@@ -1106,7 +1116,7 @@ void editExample(int n, Word& a, int pos) {
 			temp = *a->info.vd[i];
 			indexEdit(i, pos + 19, 4 , temp);
 			if (import == DELE) {
-				notify(flag, "An Enter de xoa vi du ", 0);
+				notify(flag, "An Enter de xoa vi du", 0);
 				import = _getch();
 				if (import == ENTER) {
 					deleteExample(a->info.vd, i , n);
@@ -1185,7 +1195,7 @@ void editWord(listWord k[], Word& now) {
 						setColor(WHITE);
 					}else {
 						flag = true;
-						notify(flag, "Da ton tai tu dang them         ", 0);	
+						notify(flag, "Da ton tai tu dang them", 0);	
 					}
 				}
 				break;
@@ -1258,7 +1268,7 @@ void editWord(listWord k[], Word& now) {
 						}
 					}else {
 						flag = true;
-						notify(flag, "Da ton tai nghia nay        ", 1);	
+						notify(flag, "Da ton tai nghia nay", 1);	
 					}
 				}
 				if(import == SPACE && input.size() > 0) {
@@ -1282,7 +1292,7 @@ void editWord(listWord k[], Word& now) {
 						j++;
 					}else {
 						flag = true;
-						notify(flag, "Da ton tai vi du nay         ", 1);
+						notify(flag, "Da ton tai vi du nay", 1);
 					}
 				}else if(import == SPACE && input.size() > 0) {
 					input += " ";
@@ -1312,14 +1322,26 @@ void editWord(listWord k[], Word& now) {
 				}
 				case KEY_F2: {
 					flag = true;
-					if(i == 1 && now->info.tu.empty()) notify(flag, "Ban chua nhap tu           ", 1);
-					if(i == 3 && now->info.tv == NULL) notify(flag, "Tu can co it nhat 1 nghia  ", 1);
+					if(i == 1 && now->info.tu.empty()) notify(flag, "Ban chua nhap tu", 1);
+					if(i == 3 && now->info.tv == NULL) notify(flag, "Tu can co it nhat 1 nghia", 1);
 					if(!now->info.tu.empty() && !now->info.loai.empty() && now->info.tv != NULL){
 						gotoxy(15,1);
 						i = 5;
 						successAdd("Dang ky thanh cong");
 						checkUpdate = true;
 						notify(flag,"                            ",1);
+					}
+					break;
+				}
+				case KEY_F3: {
+					if (i == 3 && now->info.tv != NULL) {
+						if(pos < 4) {
+							int start = 0;
+							editMean(now, start, pos, First);
+						}else{
+							int start = d - 4;
+							editMean(now, start, d, First);
+						}
 					}
 					break;
 				}
@@ -1330,9 +1352,6 @@ void editWord(listWord k[], Word& now) {
 					break;
 				}
 			}
-		}else if(import == TAB && i == 3 && d > 4) {
-			Tap = true;
-			showShowMean(now, d, Tap, First);
 		}else if((checkImport(import, input) && i != 2)) {
 			input +=import;
 			cout<<import;
@@ -1370,7 +1389,7 @@ void editWord(listWord k[], Word& now) {
 					//delete(now);
 					break;
 				}else if(import == ESC && (import != ENTER || import != -32 || import != 0)) {
-					notify(flag, "  							  ", 0);
+					notify(flag, "  							   ", 0);
 					break;	
 				}													//check dk 
 			}
@@ -1510,7 +1529,7 @@ Word addW(listWord k[], Word now) {
 						j++;
 					}else {
 						flag = true;
-						notify(flag, "    Da ton tai vi du nay        ", 1);
+						notify(flag, "Da ton tai vi du nay           ", 1);
 					}
 				}else if(import == SPACE && input.size() > 0) {
 					input += " ";
