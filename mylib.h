@@ -1,17 +1,6 @@
 #include <windows.h>
 #include "constants.h"
 
-int whereY() {
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi))
-		return csbi.dwCursorPosition.Y;
-}
-int whereX() {
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi))
-		return csbi.dwCursorPosition.X;
-	return -1;
-}
 void gotoxy(int x, int y) {
 	COORD coord;
 	coord.X = x;
@@ -94,10 +83,6 @@ void cls(HANDLE hConsole) {
 	SetConsoleCursorPosition(hConsole, coordScreen);
 }
 
-void clrscr() {
-	HANDLE hCon = GetStdHandle(STD_OUTPUT_HANDLE);
-	cls(hCon);
-}
 
 void normalTextColor() {
 	setColor(LIGHT_YELLOW);
@@ -109,23 +94,6 @@ void normalBGColor() {
 	setColor(WHITE);
 	setBGColor(BLUE);
 }
-char getCursorChar()    /// Function which returns character on console's cursor position 
-{
-	char c = '\0';
-	CONSOLE_SCREEN_BUFFER_INFO con;
-	HANDLE hcon = GetStdHandle(STD_OUTPUT_HANDLE);
-	if (hcon != INVALID_HANDLE_VALUE &&
-		GetConsoleScreenBufferInfo(hcon, &con))
-	{
-		DWORD read = 0;
-		if (!ReadConsoleOutputCharacterA(hcon, &c, 1,
-			con.dwCursorPosition, &read) || read != 1
-			)
-			c = '\0';
-	}
-	return c;
-}
-
 
 void resizeConsole(int width, int height)
 {

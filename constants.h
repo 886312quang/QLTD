@@ -59,43 +59,25 @@
 // size man hinh
 #define CSWIDTH 1300
 #define CSHEIGHT 700
-
 // vi tri in ten, mssv, lop
 #define xTen 59
 #define yTen 25
 #define xBox 20
 #define yBox 10
-
 //so luong hien thi
 #define sizeDp 24
 // vitri khung loading
 #define xLoading 20
 #define yLoading 30
-
-
-// vi tri menu chinh
-#define xMainMenu 10
-#define yMainMenu 12
-
 // vi tri dong chu chay
 #define xChuChay 45
 #define yChuChay 30
-
 // size box main
 #define wBoxMain 50
 #define hBoxMain 30
 //size  help
 #define wHelpMain 130
 #define hHelpMain 2
-
-// toa do y cua  bang hien thi
-#define yDisplay 2
-
-#define yDisplayMT 18
-
-#define yDisplayTop10 5
-
-
 // vi tri Tieu de 
 #define xTitle 97
 #define yTitle 5
