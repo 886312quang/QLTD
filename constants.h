@@ -4,7 +4,7 @@
 
 // Cac HotKey
 // Quay con tro ve 1 don vi char
-#define KEY_INSERT 82
+#define CTRLN 14
 #define BACKSPACE 8
 #define DELE 83
 // OK
@@ -21,7 +21,7 @@
 // Di qua phai 
 #define RIGHT 77
 // Luu
-#define KEY_F2 60
+#define CTRLS 19 
 // Xoa
 #define KEY_F3 61
 // Hieu chinh
