@@ -349,6 +349,18 @@ void insertEditMean(string x, Word& p) {
 	}
 	Last->next = me;								//last->next = null
 }
+void readExample(Word& p, ifstream& fin) {								
+	for(int i = 0; i < 5; i++) {  					//TachVidu VD MCT
+		string temp = "";
+		getline(fin, temp, '.');
+		if(!temp.empty()) {
+			p->info.vd[i] = new string;
+			*(p->info.vd[i]) = temp; 
+		}else {
+			p->info.vd[i] = NULL;
+		}
+	}
+}
 Word openFile(ifstream& fin) { 						// doc 1 thang	//note
 	Word p = new nodeWord;
 	p->left = NULL;
@@ -369,17 +381,8 @@ Word openFile(ifstream& fin) { 						// doc 1 thang	//note
 			insertMean(First, temp);				
 		}
 	}
-	p->info.tv = First;									
-	for(int i = 0; i < 5; i++) {  					//TachVidu VD MCT
-		string temp = "";
-		getline(fin, temp, '.');
-		if(!temp.empty()) {
-			p->info.vd[i] = new string;
-			*(p->info.vd[i]) = temp; 
-		}else {
-			p->info.vd[i] = NULL;
-		}
-	}
+	p->info.tv = First;
+	readExample(p, fin);
 	fin.ignore(1); 									//Xoa \n
 	return p;
 }
@@ -1861,13 +1864,30 @@ void mainSearch(listWord k[]) {
 		}
 	}
 }
+void freeMemory(listWord k[]) {
+	for (int i = 0; i < MAXKEY; i++) {
+		if (k[i].head != NULL) {
+			Word delWord = NULL;
+			Mean delMean = NULL;
+			while (k[i].head != NULL) {
+				delWord = k[i].head;
+				Mean First = delWord->info.tv;
+				deleteFMean(delWord, First);
+				for (int j = 0; j < MAXVD; j++)
+					delete k[i].head->info.vd[j];
+				k[i].head = k[i].head->right;
+				delete delWord;
+			}
+		}
+	}
+}
 int main() {
 	resizeConsole(CSWIDTH, CSHEIGHT);
 	setConsoleTitle("PHAM MINH QUANG - N18DCCN159 - DICTIONARY");
-	listWord k[MAXKEY]; 
+	listWord *k = new listWord[MAXKEY];
 	ifstream fin;
 	ofstream fout;
-	introduce();
+	//introduce();
 	system("cls");
 	addHashTable(k, fin);
 	/*for(int i = 0; i < MAXKEY; i++) {
@@ -1876,6 +1896,7 @@ int main() {
 	}*/
 	mainSearch(k);
 	checkUPD(k, fout);
+	freeMemory(k);
 	cout<<endl;
 	system("pause");
 	return 1;
